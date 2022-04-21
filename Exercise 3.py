@@ -38,22 +38,28 @@ plt.imshow(Prewitt, 'gray')
 plt.show()
 #%% manually
 # c: Apply Prewitt operator for edge detection
-#convolution manually
-cov_x_grayImage = np.zeros([img_gray.shape[0], img_gray.shape[1]])
-cov_y_grayImage = np.zeros([img_gray.shape[0], img_gray.shape[1]])
+###################padding manually
+pad_img_gray = np.full((img_gray.shape[0]+2, img_gray.shape[1]+2), 255)
 
 for i in range(img_gray.shape[0]):
     for j in range(img_gray.shape[1]):
-        cov_x_grayImage[i, j] = np.sum(kernelx * img_gray[i:i+3, j:j+3])
-        cov_y_grayImage[i, j] = np.sum(kernely * img_gray[i:i+3, j:j+3], dtype = 'uint8')
+        pad_img_gray[i+1][j+1] = img_gray[i][j]
 
-cov_x_grayImage = np.array(cov_x_grayImage, dtype = 'uint8')     
-cov_y_grayImage = np.array(cov_y_grayImage, dtype = 'uint8') 
+#convolution manually
+cov_x_img_gray = np.zeros([img_gray.shape[0], img_gray.shape[1]])
+cov_y_img_gray = np.zeros([img_gray.shape[0], img_gray.shape[1]])
 
-f = np.array(0.5 * cov_x_grayImage + 0.5 * cov_y_grayImage, dtype = 'uint8') 
+for i in range(img_gray.shape[0]):
+    for j in range(img_gray.shape[1]):
+        cov_x_img_gray[i, j] = np.sum(kernelx * pad_img_gray[i:i+3, j:j+3])
+        cov_y_img_gray[i, j] = np.sum(kernely * pad_img_gray[i:i+3, j:j+3], dtype = 'uint8')
+
+cov_x_img_gray = np.array(cov_x_img_gray, dtype = 'uint8')     
+cov_y_img_gray = np.array(cov_y_img_gray, dtype = 'uint8') 
+
+f = np.array(0.5 * cov_x_img_gray + 0.5 * cov_y_img_gray, dtype = 'uint8') 
 plt.imshow(f, "gray")
 plt.show()
-
 
 
 
